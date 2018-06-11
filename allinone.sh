@@ -102,3 +102,4 @@ EOF
 
 ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
 ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+htpasswd -c -b /etc/origin/master/htpasswd ${AUSERNAME} ${PASSWORD}
