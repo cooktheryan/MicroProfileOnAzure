@@ -38,8 +38,7 @@ domain=$(grep search /etc/resolv.conf | awk '{print $2}')
 ps -ef | grep allinone.sh > cmdline.out
 
 swapoff -a
-htpasswd -c -b /etc/origin/master/htpasswd ${AUSERNAME} ${PASSWORD}
-yum install -y wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct
+yum install -y wget git net-tools bind-utils yum-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct httpd-tools
 yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 yum -y --enablerepo=epel install ansible pyOpenSSL
@@ -49,6 +48,7 @@ git clone https://github.com/openshift/openshift-ansible
 cd openshift-ansible
 git checkout release-3.9
 chmod 755 -R /usr/share/ansible/openshift-ansible
+htpasswd -c -b /etc/origin/master/htpasswd ${AUSERNAME} ${PASSWORD}
 
 cat <<EOF > /etc/ansible/hosts
 [OSEv3:children]
@@ -70,6 +70,7 @@ openshift_override_hostname_check=true
 azure_resource_group=${RESOURCEGROUP}
 deployment_type=origin
 ansible_become=true
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 openshift_disable_check=memory_availability,disk_availability,docker_storage,package_version,docker_image_availability,package_availability
 openshift_master_default_subdomain=${WILDCARDNIP}
 osm_default_subdomain=${WILDCARDNIP}
