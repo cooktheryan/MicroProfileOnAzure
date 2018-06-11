@@ -70,6 +70,7 @@ openshift_override_hostname_check=true
 azure_resource_group=${RESOURCEGROUP}
 deployment_type=origin
 ansible_become=true
+openshift_master_manage_htpasswd=false
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 openshift_disable_check=memory_availability,disk_availability,docker_storage,package_version,docker_image_availability,package_availability
 openshift_master_default_subdomain=${WILDCARDNIP}
